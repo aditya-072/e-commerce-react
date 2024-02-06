@@ -1,5 +1,5 @@
 import axios from "axios";
-import { act } from "react-dom/test-utils";
+// import { act } from "react-dom/test-utils";
 import baseURL from "../../../utils/baseURL";
 import {
   resetErrAction,
@@ -205,7 +205,7 @@ const productSlice = createSlice({
     builder.addCase(fetchProductsAction.fulfilled, (state, action) => {
       state.loading = false;
       state.products = action.payload;
-      state.isAdded = true;
+      // state.isAdded = true;
     });
     builder.addCase(fetchProductsAction.rejected, (state, action) => {
       state.loading = false;
@@ -228,8 +228,12 @@ const productSlice = createSlice({
       state.isAdded = false;
       state.error = action.payload;
     });
+
     //reset error
     builder.addCase(resetErrAction.pending, (state, action) => {
+      state.isAdded = false;
+      state.isUpdated = false;
+      state.isDelete = false;
       state.error = null;
     });
     //reset success
@@ -237,6 +241,7 @@ const productSlice = createSlice({
       state.isAdded = false;
       state.isUpdated=false;
       state.isDelete=false;
+      state.error=null;
     });
   },
 });

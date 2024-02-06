@@ -61,6 +61,42 @@ export const fetchCategoriesAction = createAsyncThunk(
     }
   }
 );
+
+//delete Category action
+export const deleteCategoryAction = createAsyncThunk(
+  "category/delete",
+  async (payload, { rejectWithValue, getState, dispatch }) => {
+    console.log(payload);
+    try {
+      const { _id } = payload;
+      //fromData
+      // const formData = new FormData();
+      // formData.append("name", name);
+      // formData.append("file", file);
+      //Token - Authenticated
+      const token = getState()?.users?.userAuth?.userInfo?.token;
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      };
+      //Images
+      // const { data } = await axios.post(
+      //   `${baseURL}/categories`,
+      //   formData,
+      //   config
+      // );
+      const { data } = await axios.delete(
+        `${baseURL}/categories/${_id}`,
+        config
+      );
+      return data;
+    } catch (error) {
+      return rejectWithValue(error?.response?.data);
+    }
+  }
+);
+
 //slice
 const categorySlice = createSlice({
   name: "categories",
@@ -95,15 +131,36 @@ const categorySlice = createSlice({
       state.categories = null;
       state.error = action.payload;
     });
+
+    //delete
+    builder.addCase(deleteCategoryAction.pending, (state) => {
+      state.loading = true;
+    });
+    builder.addCase(deleteCategoryAction.fulfilled, (state, action) => {
+      state.loading = false;
+      state.isDelete = true;
+      // fetchCategoriesAction();
+    });
+    builder.addCase(deleteCategoryAction.rejected, (state, action) => {
+      state.loading = false;
+      state.isDelete=false;
+      state.error = action.payload;
+    });
+
     //Reset err
     builder.addCase(resetErrAction.pending, (state, action) => {
+      // state.error = null;
+      state.isAdded = false;
+      state.isUpdated = false;
+      state.isDelete = false;
       state.error = null;
     });
     //Reset success
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
-      state.isUpdated=false;
-      state.isDelete=false;
+      state.isUpdated = false;
+      state.isDelete = false;
+      state.error = null;
     });
   },
 });
