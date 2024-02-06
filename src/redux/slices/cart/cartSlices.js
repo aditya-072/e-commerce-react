@@ -1,7 +1,9 @@
-import { resetErrAction, resetSuccessAction } from "../globalActions/globalActions";
+import {
+  resetErrAction,
+  resetSuccessAction,
+} from "../globalActions/globalActions";
 
 const { createAsyncThunk, createSlice } = require("@reduxjs/toolkit");
-
 
 //initalsState
 const initialState = {
@@ -112,16 +114,20 @@ const cartSlice = createSlice({
     );
 
     // reset error action
-    builder.addCase(resetErrAction.pending, (state, action)=>{
-      state.error=null;
+    builder.addCase(resetErrAction.pending, (state, action) => {
+      state.isAdded = false;
+      state.isUpdated = false;
+      state.isDelete = false;
+      state.error = null;
     });
 
     // reset success action
-    builder.addCase(resetSuccessAction.pending, (state, action)=>{
-      state.isAdded=false;
-      state.isUpdated=false;
-      state.isDelete=false;
-    })
+    builder.addCase(resetSuccessAction.pending, (state, action) => {
+      state.isAdded = false;
+      state.isUpdated = false;
+      state.isDelete = false;
+      state.error = null;
+    });
   },
 });
 

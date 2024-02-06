@@ -1,20 +1,22 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigation } from "react-router-dom";
 import ErrorComponent from "../../ErrorMsg/ErrorMsg";
 import SuccessMsg from "../../SuccessMsg/SuccessMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 
 export default function UpdateCategory() {
+  
+  let loading, error, isUpdated, categoryName;
+  
   //---form data---
   const [formData, setFormData] = useState({
-    name: categoryName,
+    name: categoryName??"",
   });
   //---onChange---
   const handleOnChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  let loading, error, isUpdated, categoryName;
 
   //onSubmit
   const handleOnSubmit = (e) => {

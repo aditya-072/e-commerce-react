@@ -95,6 +95,8 @@ const colorsSlice = createSlice({
     //reset error action
     builder.addCase(resetErrAction.pending, (state, action) => {
       state.isAdded = false;
+      state.isUpdated = false;
+      state.isDelete = false;
       state.error = null;
     });
     //reset success action

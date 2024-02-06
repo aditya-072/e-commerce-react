@@ -1,9 +1,13 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import { fetchCategoriesAction } from "../../../redux/slices/categories/categoriesSlice";
+import {
+  fetchCategoriesAction,
+  deleteCategoryAction,
+} from "../../../redux/slices/categories/categoriesSlice";
 
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
+import SuccessMsg from "../../SuccessMsg/SuccessMsg";
 import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import NoDataFound from "../../NoDataFound/NoDataFound";
 
@@ -15,12 +19,16 @@ export default function ManageCategories() {
   }, [dispatch]);
   const {
     categories: { categories },
+    isDelete,
     loading,
     error,
   } = useSelector((state) => state?.categories);
 
   //delete category handler
-  const deleteCategoryHandler = (id) => {};
+  const deleteCategoryHandler = async (_id) => {
+    await dispatch(deleteCategoryAction({ _id })); // if does not await then component will rerender before the delete that will not show updated data
+    await dispatch(fetchCategoriesAction()); // without fetchCategoriesAction the component do not rerenders as the store do not change
+  };
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="sm:flex sm:items-center">
@@ -36,7 +44,8 @@ export default function ManageCategories() {
           <Link
             to="/admin/add-category"
             type="button"
-            className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
+            className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto"
+          >
             Add New Category
           </Link>
         </div>
@@ -45,6 +54,8 @@ export default function ManageCategories() {
         <LoadingComponent />
       ) : error ? (
         <ErrorMsg message={error?.message} />
+      ) : isDelete ? (
+        <SuccessMsg message={"deleted successfully!"} />
       ) : categories?.length <= 0 ? (
         <NoDataFound />
       ) : (
@@ -57,18 +68,21 @@ export default function ManageCategories() {
                     <tr>
                       <th
                         scope="col"
-                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6">
+                        className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-6"
+                      >
                         Name
                       </th>
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         No. Products
                       </th>
 
                       <th
                         scope="col"
-                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+                        className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900"
+                      >
                         Created At
                       </th>
                     </tr>
@@ -102,7 +116,7 @@ export default function ManageCategories() {
                           {new Date(category?.createdAt).toLocaleDateString()}
                         </td>
                         {/* edit icon */}
-                        {/* <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-left text-sm font-medium sm:pr-6">
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-left text-sm font-medium sm:pr-6">
                           <Link
                             to={`/admin/edit-category/${category?._id}`}
                             state={{
@@ -125,19 +139,21 @@ export default function ManageCategories() {
 
                             <span className="sr-only">, {category?.name}</span>
                           </Link>
-                        </td> */}
+                        </td>
                         {/* delete icon */}
-                        {/* <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-left text-sm font-medium sm:pr-6">
+                        <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-left text-sm font-medium sm:pr-6">
                           <button
                             onClick={() => deleteCategoryHandler(category?._id)}
-                            className="text-indigo-600 hover:text-indigo-900">
+                            className="text-indigo-600 hover:text-indigo-900"
+                          >
                             <svg
                               xmlns="http://www.w3.org/2000/svg"
                               fill="none"
                               viewBox="0 0 24 24"
                               stroke-width="1.5"
                               stroke="currentColor"
-                              class="w-6 h-6">
+                              class="w-6 h-6"
+                            >
                               <path
                                 stroke-linecap="round"
                                 stroke-linejoin="round"
@@ -145,7 +161,7 @@ export default function ManageCategories() {
                               />
                             </svg>
                           </button>
-                        </td> */}
+                        </td>
                       </tr>
                     ))}
                   </tbody>

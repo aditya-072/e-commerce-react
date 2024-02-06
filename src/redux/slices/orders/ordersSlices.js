@@ -212,12 +212,17 @@ const ordersSlice = createSlice({
     });
     //reset error
     builder.addCase(resetErrAction.pending, (state, action) => {
+      // state.error = null;
+      state.isAdded = false;
+      state.isUpdated = false;
       state.error = null;
     });
     //reset success
     builder.addCase(resetSuccessAction.pending, (state, action) => {
       state.isAdded = false;
       state.isUpdated=false;
+      state.error=null;
+      
     });
   },
 });

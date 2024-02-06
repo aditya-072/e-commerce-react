@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { fetchProductsAction } from "../../../redux/slices/products/productSlices";
 import baseURL from "../../../utils/baseURL";
 import ErrorMsg from "../../ErrorMsg/ErrorMsg";
@@ -8,6 +8,10 @@ import LoadingComponent from "../../LoadingComp/LoadingComponent";
 import NoDataFound from "../../NoDataFound/NoDataFound";
 
 export default function ManageStocks() {
+
+  const navigate=useNavigate();
+  
+
   //delete product handler
   const deleteProductHandler = (id) => {};
   let productUrl = `${baseURL}/products`;
@@ -40,6 +44,7 @@ export default function ManageStocks() {
         </div>
         <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
           <button
+            onClick={()=>navigate('/admin/add-product')}
             type="button"
             className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 sm:w-auto">
             Add New Product
